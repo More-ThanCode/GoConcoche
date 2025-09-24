@@ -31,14 +31,8 @@ public class VehicleController {
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<VehicleResponse>> getVehiclesByOwnerId(@PathVariable Long ownerId) {
-        List<VehicleResponse> vehicles = vehicleService.getVehicleByOwnerId(ownerId);
-        return new ResponseEntity<>(vehicles, HttpStatus.OK);
-    }
-
-    @GetMapping("/my")
-    public ResponseEntity<List<VehicleResponse>> getMyVehicles() {
-        List<VehicleResponse> vehicles = vehicleService.getMyVehicles();
+    public ResponseEntity<List<VehicleResponse>> getVehiclesByOwner(@PathVariable Long ownerId) {
+        List<VehicleResponse> vehicles = vehicleService.getVehicleByOwner(ownerId);
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
 }

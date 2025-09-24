@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table (name="owner_profiles")
@@ -22,12 +20,9 @@ public class OwnerProfile {
 
     @OneToOne
     @JoinColumn(name = "registered_user_id", referencedColumnName = "id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private RegisteredUser registeredUser;
 
     @NotBlank
     @Column(name = "image_url", nullable = false)
     private String imageURL;
-
-    private String publicImageId;
 }
