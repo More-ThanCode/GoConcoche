@@ -12,4 +12,5 @@ public interface VehicleService {
     List<VehicleResponse> getVehicleByOwnerId(Long ownerId);
     List<VehicleResponse> getMyVehicles();
     VehicleResponse updateVehicle(Long id, VehicleRequest vehicleRequest);
+    void deleteVehicle(Long id);
 }
