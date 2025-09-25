@@ -1,5 +1,8 @@
 package com.more_than_code.go_con_coche.renter_profile.services;
 
+import com.more_than_code.go_con_coche.cloudinary.CloudinaryService;
+import com.more_than_code.go_con_coche.cloudinary.DefaultImageType;
+import com.more_than_code.go_con_coche.cloudinary.UploadResult;
 import com.more_than_code.go_con_coche.global.EntityAlreadyExistsException;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.registered_user.services.UserAuthService;
@@ -19,6 +22,7 @@ public class RenterProfileServiceImpl implements RenterProfileService{
     private final RenterProfileRepository renterProfileRepository;
     private final UserAuthService userAuthService;
     private final RenterProfileMapper renterProfileMapper;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     @Transactional
@@ -31,6 +35,10 @@ public class RenterProfileServiceImpl implements RenterProfileService{
         if (renterProfileRepository.existsByRegisteredUser(user)){
          throw new EntityAlreadyExistsException(RenterProfile.class.getSimpleName(), "user", user.getUsername());
         }
+
+        UploadResult uploadResult = cloudinaryService.resolveImage(renterProfileRequest.image(), DefaultImageType.PROFILE);
+        renterProfile.setImageURL(uploadResult.url());
+        renterProfile.setPublicImageId(uploadResult.publicId());
 
         RenterProfile savedRenterProfile = renterProfileRepository.save(renterProfile);
 

@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/renter-profiles")
@@ -20,7 +17,7 @@ public class RenterProfileController {
     private final RenterProfileService renterProfileService;
 
     @PostMapping("")
-    public ResponseEntity<RenterProfileResponse> createRenterProfile(@Valid @RequestBody RenterProfileRequest renterProfileRequest) {
+    public ResponseEntity<RenterProfileResponse> createRenterProfile(@Valid @ModelAttribute RenterProfileRequest renterProfileRequest) {
         RenterProfileResponse createdRenterProfile = renterProfileService.createRenterProfile(renterProfileRequest);
         return new ResponseEntity<>(createdRenterProfile, HttpStatus.CREATED);
     }

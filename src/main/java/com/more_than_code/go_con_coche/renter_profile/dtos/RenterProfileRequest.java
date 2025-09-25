@@ -5,9 +5,9 @@ import com.more_than_code.go_con_coche.renter_profile.models.TypeLicense;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record RenterProfileRequest(
         @NotNull(message = "License type is mandatory")
@@ -20,6 +20,6 @@ public record RenterProfileRequest(
         @JsonFormat(pattern = "dd-MM-yyyy")
         LocalDate expiredDate,
 
-        String imageUrl
+        MultipartFile image
 ) {
 }

@@ -38,7 +38,8 @@ public class RenterProfile {
     @Column(name = "expired_date")
     public LocalDate expiredDate;
 
-    @NotBlank
     @Column(name = "image_url")
     private String imageURL;
+
+    private String publicImageId;
 }

@@ -13,7 +13,6 @@ public class RenterProfileMapper {
                 .typeLicense(request.typeLicense())
                 .licenseNumber(request.licenseNumber())
                 .expiredDate(request.expiredDate())
-                .imageURL(request.imageUrl())
                 .build();
     }
 
