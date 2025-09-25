@@ -34,4 +34,4 @@ INSERT INTO renter_profiles (registered_user_id, type_license, licence_number, e
 VALUES (2, 'B', 'LIC123456', '2026-12-31', 'https://somexample.com/images/anna.jpg');
 
 -- locations
---INSERT INTO locations (city, district) VALUES ('Valencia', 'El Carmen')
+INSERT INTO locations (city, district) VALUES ('Valencia', 'El Carmen')
