@@ -9,5 +9,6 @@ public interface VehicleService {
 
     VehicleResponse createVehicle(VehicleRequest vehicleRequest);
     List<VehicleResponse> getAllVehicles();
-    List<VehicleResponse> getVehicleByOwner(Long ownerId);
+    List<VehicleResponse> getVehicleByOwnerId(Long ownerId);
+    List<VehicleResponse> getMyVehicles();
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -40,5 +42,13 @@ public class GlobalExceptionHandler {
         String path = String.valueOf(req.getRequestURL());
         ErrorResponse errorResponse = new ErrorResponse(status, message, path);
         return new ResponseEntity<>(errorResponse, status);
+    }
+
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public ResponseEntity<Map<String, String>> handleUnauthorizedActionException(UnauthorizedActionException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Forbidden");
+        errorResponse.put("message", ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
     }
 }

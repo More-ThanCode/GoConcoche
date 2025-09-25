@@ -35,4 +35,10 @@ public class VehicleController {
         List<VehicleResponse> vehicles = vehicleService.getVehicleByOwner(ownerId);
         return new ResponseEntity<>(vehicles, HttpStatus.OK);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<VehicleResponse> updateVehicle(@PathVariable Long id, @Valid @ModelAttribute VehicleRequest vehicleRequest) {
+        VehicleResponse updatedVehicle = vehicleService.updateVehicle(id, vehicleRequest);
+        return new ResponseEntity<>(updatedVehicle, HttpStatus.OK);
+    }
 }

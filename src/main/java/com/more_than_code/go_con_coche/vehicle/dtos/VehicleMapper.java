@@ -41,4 +41,40 @@ public class VehicleMapper {
                 .username(vehicle.getOwner().getRegisteredUser().getUsername())
                 .build();
     }
+
+    public void updateFromDto(VehicleRequest request, Vehicle vehicle) {
+        if (request.vin() != null) {
+            vehicle.setVin(request.vin());
+        }
+        if (request.plateNumber() != null) {
+            vehicle.setPlateNumber(request.plateNumber());
+        }
+        if (request.insuranceNumber() != null) {
+            vehicle.setInsuranceNumber(request.insuranceNumber());
+        }
+        if (request.model() != null) {
+            vehicle.setModel(request.model());
+        }
+        if (request.brand() != null) {
+            vehicle.setBrand(request.brand());
+        }
+        if (request.year() != null) {
+            vehicle.setYear(request.year());
+        }
+        if (request.color() != null) {
+            vehicle.setColor(request.color());
+        }
+        if (request.seater() != null) {
+            vehicle.setSeater(request.seater());
+        }
+        if (request.childSeatsNumber() != null) {
+            vehicle.setChildSeatsNumber(request.childSeatsNumber());
+        }
+        if (request.fuelTypeCar() != null) {
+            vehicle.setFuelTypeCar(request.fuelTypeCar());
+        }
+        if (request.fuelConsumption() != null) {
+            vehicle.setFuelConsumption(request.fuelConsumption());
+        }
+    }
 }
