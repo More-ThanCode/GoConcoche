@@ -34,4 +34,7 @@ INSERT INTO renter_profiles (registered_user_id, type_license, licence_number, e
 VALUES (2, 'B', 'LIC123456', '2026-12-31', 'https://somexample.com/images/anna.jpg');
 
 -- locations
-INSERT INTO locations (city, district) VALUES ('Valencia', 'El Carmen')
+INSERT INTO locations (city, district) VALUES ('Valencia', 'El Carmen');
+
+--vehicles
+INSERT INTO vehicles (vin, plate_number, insurance_number, model, brand, year, color, seater, child_seats_number, fuel_type_car, fuel_consumption, image_url, owner_id) VALUES ('WVWZZZ1JZXW000001','AA1234BB', 'INS-987654321', 'Golf', 'Volkswagen', 2020, 'Black', 'SEDAN', 1,'PETROL', '7.5L/100km','https://someexample.com/images/car.jpg', 1);
