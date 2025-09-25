@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,6 +27,7 @@ public class RenterProfile {
 
     @OneToOne
     @JoinColumn(name = "registered_user_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private RegisteredUser registeredUser;
 
     @Enumerated(EnumType.STRING)

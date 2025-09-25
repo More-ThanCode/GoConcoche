@@ -3,6 +3,8 @@ package com.more_than_code.go_con_coche.vehicle.models;
 import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 
@@ -58,5 +60,6 @@ public class Vehicle {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private OwnerProfile owner;
 }
