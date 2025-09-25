@@ -136,4 +136,23 @@ public class VehicleServiceImpl implements VehicleService{
         Vehicle updatedVehicle = vehicleRepository.save(existingVehicle);
         return vehicleMapper.toResponse(updatedVehicle);
     }
+
+    @Override
+    @Transactional
+    public void deleteVehicle(Long id) {
+        Vehicle vehicleToDelete = vehicleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Vehicle", "id", id.toString()));
+
+        RegisteredUser user = userAuthService.getAuthenticatedUser();
+
+        if (!vehicleToDelete.getOwner().getRegisteredUser().getId().equals(user.getId())) {
+            throw new UnauthorizedActionException("delete", "Vehicle", id.toString());
+        }
+
+        if (vehicleToDelete.getPublicImageId() != null) {
+            cloudinaryService.delete(vehicleToDelete.getPublicImageId());
+        }
+
+        vehicleRepository.delete(vehicleToDelete);
+    }
 }
