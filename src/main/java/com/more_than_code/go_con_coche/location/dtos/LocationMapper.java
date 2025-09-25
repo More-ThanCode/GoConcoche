@@ -8,7 +8,7 @@ public class LocationMapper {
     public LocationResponse toResponse(Location location) {
         return new LocationResponse(location.getId(),
                 location.getCity(),
-                location.getCity());
+                location.getDistrict());
     }
 
     public Location toEntity(LocationRequest request) {
