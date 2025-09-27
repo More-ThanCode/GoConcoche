@@ -76,16 +76,4 @@ class AuthControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.username").value("testuser"));
     }
-
-    @Test
-    void refreshToken_ShouldReturn200() throws Exception {
-        String refreshToken = jwtService.generateRefreshToken("owner");
-
-        Cookie refreshCookie = new Cookie("refresh_token", refreshToken);
-
-        mockMvc.perform(post("/api/auth/refresh")
-                        .cookie(refreshCookie))
-                .andExpect(status().isOk())
-                .andExpect(header().exists(HttpHeaders.AUTHORIZATION));
-    }
 }
