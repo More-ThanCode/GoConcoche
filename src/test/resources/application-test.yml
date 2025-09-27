@@ -38,6 +38,17 @@ spring:
       PROFILE: /images/default-profile.jpg
       CAR: /images/default-car.jpg
 
+  mail:
+    host: localhost
+    port: 2525
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
   jwt:
     rsa-public-key: ${RSA_PUBLIC_KEY}
     rsa-private-key: ${RSA_PRIVATE_KEY}
