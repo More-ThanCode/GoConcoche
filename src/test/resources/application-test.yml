@@ -39,10 +39,10 @@ spring:
       CAR: /images/default-car.jpg
 
   mail:
-    host: localhost
-    port: 2525
-    username: test
-    password: test
+    host: mailhog
+    port: 1025
+    username: ""
+    password: ""
     properties:
       mail:
         smtp:

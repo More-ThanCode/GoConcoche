@@ -9,7 +9,7 @@ services:
         source: .
         target: /src
 
-    entrypoint: ["mvn", "-Ptest", "clean", "verify", "--no-transfer-progress"]
+    entrypoint: ["/bin/sh", "-c", "echo $RSA_PUBLIC_KEY | head -c 30; echo ...; echo $RSA_PRIVATE_KEY | head -c 30; echo ...; mvn -Ptest clean verify --no-transfer-progress"]
 
     container_name: test
 
@@ -19,6 +19,8 @@ services:
       - SERVER_PORT=8080
       - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
       - RSA_PRIVATE_KEY=${RSA_PRIVATE_KEY}
+      - SPRING_MAIL_HOST=mailhog
+      - SPRING_MAIL_PORT=1025
 
     restart: no
 
@@ -28,3 +30,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    platform: linux/amd64
+    ports:
+      - "1025:1025"
+      - "8025:8025"
