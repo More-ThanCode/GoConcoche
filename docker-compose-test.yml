@@ -17,15 +17,10 @@ services:
       - SPRING_PROFILES_ACTIVE=test
       - SHOW_SQL=false
       - SERVER_PORT=8080
-      - DB_URL=jdbc:mysql://test-db:3306/test
-      - DB_USERNAME=usertest
-      - DB_PASSWORD=app123
+      - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
+      - RSA_PRIVATE_KEY=${RSA_PRIVATE_KEY}
 
     restart: no
-
-    depends_on:
-      test-db:
-        condition: service_healthy
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
@@ -33,34 +28,3 @@ services:
       timeout: 10s
       retries: 3
       start_period: 60s
-
-  test-db:
-    image: mysql:8.0
-
-    container_name: db
-
-    command: --lower_case_table_names=1
-
-    environment:
-      MYSQL_DATABASE: app
-      MYSQL_USER: userapp
-      MYSQL_PASSWORD: app123
-      MYSQL_ROOT_PASSWORD: root123
-
-    restart: no
-
-    healthcheck:
-      test: [
-        "CMD",
-        "mysqladmin",
-        "ping",
-        "-h",
-        "localhost",
-        "-u",
-        "userapp",
-        "-papp123",
-      ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s

@@ -2,7 +2,6 @@ package com.more_than_code.go_con_coche.cloudinary;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.Uploader;
-import com.more_than_code.go_con_coche.config.CloudinaryProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

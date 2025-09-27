@@ -1,7 +1,6 @@
 package com.more_than_code.go_con_coche.cloudinary;
 
 import com.cloudinary.Cloudinary;
-import com.more_than_code.go_con_coche.config.CloudinaryProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -11,9 +11,33 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        hbm2ddl:
+          auto: none
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+        globally_quoted_identifiers: true
+        connection:
+          provider_disables_autocommit: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: never
+    defer-datasource-initialization: true
   h2:
     console:
       enabled: true
+
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+    default-images:
+      PROFILE: /images/default-profile.jpg
+      CAR: /images/default-car.jpg
+
   jwt:
     rsa-public-key: ${RSA_PUBLIC_KEY}
     rsa-private-key: ${RSA_PRIVATE_KEY}
