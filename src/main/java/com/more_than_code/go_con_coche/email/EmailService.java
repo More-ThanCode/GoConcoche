@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -18,7 +20,29 @@ public class EmailService {
         Context context = new Context();
         context.setVariable("username", username);
         String html = templateEngine.process("welcome-email", context);
-        sendHtmlEmail(to, "Registration to GoConCoche was successful.", html);
+        sendHtmlEmail(to, "Registration to GoConCoche was successful", html);
+    }
+
+    public void sendConfirmationEmail(String to, String username, String reservationCode, LocalDateTime startDate, LocalDateTime endDate, String vehicleBrand, int vehicleYear, String vehicleColor, String seater, int childSeatsNumber, String vehicleModel, int countTime, int priceHour, int totalPrice, String location, String imageUrl) {
+        Context context = new Context();
+        context.setVariable("username", username);
+        context.setVariable("reservationCode", reservationCode);
+        context.setVariable("startDate", startDate);
+        context.setVariable("endDate", endDate);
+        context.setVariable("vehicleBrand", vehicleBrand);
+        context.setVariable("vehicleYear", vehicleYear);
+        context.setVariable("vehicleColor", vehicleColor);
+        context.setVariable("seater", seater);
+        context.setVariable("childSeatsNumber", childSeatsNumber);
+        context.setVariable("vehicleModel", vehicleModel);
+        context.setVariable("countTime", countTime);
+        context.setVariable("priceHour", priceHour);
+        context.setVariable("totalPrice", totalPrice);
+        context.setVariable("location", location);
+        context.setVariable("imageUrl", imageUrl);
+
+        String html = templateEngine.process("reservation-email", context);
+        sendHtmlEmail(to, "Reservation on GoConCoche was confirmed", html);
     }
 
     private void sendHtmlEmail(String to, String subject, String html) {
