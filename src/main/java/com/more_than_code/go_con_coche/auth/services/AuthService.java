@@ -1,5 +1,6 @@
 package com.more_than_code.go_con_coche.auth.services;
 
+import com.more_than_code.go_con_coche.email.EmailService;
 import com.more_than_code.go_con_coche.role.Role;
 import com.more_than_code.go_con_coche.role.RoleRepository;
 import com.more_than_code.go_con_coche.auth.dtos.AuthRequest;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -30,6 +33,7 @@ public class AuthService {
     private final RegisteredUserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final EmailService emailService;
 
     public RegisterResponse register(RegisterRequest registerDto) {
         Set<Role> roles = registerDto.roleIds().stream()
@@ -53,7 +57,7 @@ public class AuthService {
                 .build();
         RegisteredUser savedUser = userRepository.save(user);
         Set<String> roleNames = getRoleNames(savedUser);
-
+        emailService.sendRegistrationEmail(user.getEmail(), user.getFirstName());
         return new RegisterResponse(savedUser.getUsername(), roleNames);
     }
 

@@ -2,8 +2,10 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+
   application:
     name: go_con_coche
+
   config:
     import: optional:file:.env[.properties]
 
@@ -31,6 +33,22 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
 
 server:
   port: ${SERVER_PORT:8080}
