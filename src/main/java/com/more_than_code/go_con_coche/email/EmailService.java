@@ -23,6 +23,13 @@ public class    EmailService {
         sendHtmlEmail(to, "Registration to GoConCoche was successful", html);
     }
 
+    public void sendResetPasswordEmail(String to, String username) {
+        Context context = new Context();
+        context.setVariable("username", username);
+        String html = templateEngine.process("forgot-password-email", context);
+        sendHtmlEmail(to, "Password reset request to your GoConCoche account", html);
+    }
+
     public void sendConfirmationEmail(String to, String username, String reservationCode, LocalDateTime startDate, LocalDateTime endDate, String vehicleBrand, int vehicleYear, String vehicleColor, String seater, int childSeatsNumber, String vehicleModel, int countTime, int priceHour, int totalPrice, String location, String imageUrl) {
         Context context = new Context();
         context.setVariable("username", username);
@@ -69,7 +76,7 @@ public class    EmailService {
         context.setVariable("imageUrl", imageUrl);
 
         String html = templateEngine.process("reminder-email", context);
-        sendHtmlEmail(to, "Reminder: Your GoConCoche reservation starts in 2 hours!", html);
+        sendHtmlEmail(to, "Reminder: Your GoConCoche reservation starts in 1 hour!", html);
     }
 
     private void sendHtmlEmail(String to, String subject, String html) {
