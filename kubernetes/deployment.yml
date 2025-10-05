@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: peraltamorena/go-con-coche-app:latest
+          image: goconcoche/go-con-coche-app:latest
           ports:
             - containerPort: 8080
               name: http
