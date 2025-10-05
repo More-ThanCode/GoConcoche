@@ -1,29 +1,20 @@
 spring:
-  output:
-    ansi:
-      enabled: ALWAYS
-
   application:
     name: go_con_coche
 
   config:
     import: optional:file:.env[.properties]
 
-  devtools:
-    restart:
-      enabled: false
-    livereload:
-      enabled: false
-
   datasource:
     url: ${DB_URL_LOCAL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    root-password: ${DB_ROOT_PASSWORD}
 
-  sql:
-    init:
-      mode: always
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
 
   jpa:
     hibernate:
@@ -49,13 +40,6 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
-
-  data:
-    redis:
-      host: localhost
-      port: 6379
-      password:
-      timeout: 60000
 
 server:
   port: ${SERVER_PORT:8080}

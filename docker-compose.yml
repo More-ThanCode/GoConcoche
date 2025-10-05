@@ -11,15 +11,32 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
       - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p${DB_ROOT_PASSWORD}"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - go-con-coche-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  go-con-coche-redis:
+    image: redis:7-alpine
+    container_name: go-con-coche-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - go-con-coche-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   go-con-coche-app:
     image: go-con-coche-app
@@ -35,24 +52,23 @@ services:
       DB_USERNAME: ${MYSQL_USER_DOCKER}
       DB_PASSWORD: ${MYSQL_PASSWORD_DOCKER}
       SPRING_PROFILES_ACTIVE: docker
+      REDIS_HOST: go-con-coche-redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     depends_on:
-      - go-con-coche-db
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"] # Health check command
-      interval: 30s # Check every 30 seconds
-      timeout: 10s # Timeout after 10 seconds
-      retries: 3 # Retry 3 times before marking as unhealthy
-      start_period: 60s
+      go-con-coche-db:
+        condition: service_healthy
+      go-con-coche-redis:
+        condition: service_healthy
     networks:
       - go-con-coche-network
+    restart: on-failure
 
 networks:
   go-con-coche-network:
     driver: bridge
-    name: go-con-coche-network
 
 volumes:
   mysql_data:
-    name: go-con-coche_mysql_data
+  redis_data:
   app_logs:
-    name: go-con-coche_app_logs

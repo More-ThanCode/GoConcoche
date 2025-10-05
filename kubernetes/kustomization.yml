@@ -9,6 +9,7 @@ resources:
   - service.yml
   - configmap.yml
   - mailhog.yml
+  - redis.yml
 
 images:
   - name: peraltamorena/go-con-coche-app
