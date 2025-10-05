@@ -33,8 +33,6 @@ public class PasswordResetService {
 
         String token = UUID.randomUUID().toString();
 
-        // Store in Redis: key = "password_reset:TOKEN", value = "email"
-        // Expires automatically after 10 minutes
         String redisKey = REDIS_PREFIX + token;
         redisTemplate.opsForValue().set(
                 redisKey,
@@ -43,7 +41,6 @@ public class PasswordResetService {
                 TimeUnit.MINUTES
         );
 
-        // Send email with token
         emailService.sendResetPasswordEmail(user.getEmail(), user.getFirstName(), token);
     }
 
@@ -51,21 +48,18 @@ public class PasswordResetService {
     public void resetPassword(ResetPasswordRequest request) {
         String redisKey = REDIS_PREFIX + request.token();
 
-        // Get email from Redis
         String email = redisTemplate.opsForValue().get(redisKey);
 
         if (email == null) {
             throw new IllegalArgumentException("Invalid or expired reset token");
         }
 
-        // Find user and update password
         RegisteredUser user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         user.setPassword(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
 
-        // Delete token from Redis (one-time use)
         redisTemplate.delete(redisKey);
     }
 
