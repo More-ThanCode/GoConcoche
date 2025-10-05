@@ -62,7 +62,7 @@ jobs:
 
             ## Changes
             - Updated `kubernetes/kustomization.yml` image tag to `${{ steps.get_Thetag.outputs.tag }}`
-            - This corresponds to the Docker image: `raelga/ff5-dreamroute:${{ steps.get_tag.outputs.tag }}`
+            - This corresponds to the Docker image: `goconcoche/go-con-coche-app:${{ steps.get_tag.outputs.tag }}`
 
             ## Release Workflow
             - Triggered by release workflow run: ${{ github.event.workflow_run.html_url }}
