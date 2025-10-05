@@ -23,9 +23,10 @@ public class    EmailService {
         sendHtmlEmail(to, "Registration to GoConCoche was successful", html);
     }
 
-    public void sendResetPasswordEmail(String to, String username) {
+    public void sendResetPasswordEmail(String to, String username, String token) {
         Context context = new Context();
         context.setVariable("username", username);
+        context.setVariable("resetLink", "http://localhost:5173/reset-password?token=" + token);
         String html = templateEngine.process("forgot-password-email", context);
         sendHtmlEmail(to, "Password reset request to your GoConCoche account", html);
     }
