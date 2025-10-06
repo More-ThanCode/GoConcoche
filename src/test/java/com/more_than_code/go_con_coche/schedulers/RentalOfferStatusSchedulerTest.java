@@ -27,7 +27,7 @@ class RentalOfferStatusSchedulerTest {
         when(offerRepository.findByEndDateTimeBeforeAndIsAvailableTrue(any(LocalDateTime.class)))
                 .thenReturn(List.of(offer1, offer2));
 
-        scheduler.updateFlightStatuses();
+        scheduler.updateRentalOfferStatuses();
 
         verify(offer1, times(1)).updateStatusIfNeeded();
         verify(offer2, times(1)).updateStatusIfNeeded();
@@ -39,7 +39,7 @@ class RentalOfferStatusSchedulerTest {
         when(offerRepository.findByEndDateTimeBeforeAndIsAvailableTrue(any(LocalDateTime.class)))
                 .thenReturn(List.of());
 
-        scheduler.updateFlightStatuses();
+        scheduler.updateRentalOfferStatuses();
 
         verify(offerRepository, times(1)).findByEndDateTimeBeforeAndIsAvailableTrue(any(LocalDateTime.class));
         verify(offerRepository, times(1)).saveAll(List.of());
