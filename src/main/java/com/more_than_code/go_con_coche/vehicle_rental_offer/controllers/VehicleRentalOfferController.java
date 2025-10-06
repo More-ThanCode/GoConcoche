@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/vehicle-rental-offers")
 @RequiredArgsConstructor
-@Tag(name = "Rental Offers", description = "Operations to create, retrieve, and delete rental offers")
+@Tag(name ="Rental Offers", description = "Operations to create, retrieve, and delete rental offers.")
 public class VehicleRentalOfferController {
     private final VehicleRentalOfferServiceImpl rentalOfferService;
 

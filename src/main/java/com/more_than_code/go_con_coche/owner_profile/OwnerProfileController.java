@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/owner-profiles")
 @RequiredArgsConstructor
-@Tag(name = "Owner Profiles", description = "Operations related to owners' profiles")
+@Tag(name = "Owner Profiles", description = "Operations related to owners' profiles.")
 public class OwnerProfileController {
     private final OwnerProfileService ownerProfileService;
 

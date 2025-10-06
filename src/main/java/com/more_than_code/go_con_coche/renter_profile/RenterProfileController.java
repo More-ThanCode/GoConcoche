@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/renter-profiles")
 @RequiredArgsConstructor
-@Tag(name = "Renter Profiles", description = "API for managing renter profiles")
+@Tag(name = "Renter Profiles", description = "Operations related to renters' profiles.")
 public class RenterProfileController {
 
     private final RenterProfileService renterProfileService;

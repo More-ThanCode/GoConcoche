@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/roles")
 @PreAuthorize("hasRole('ADMIN')")
-@Tag(name = "Roles", description = "Operations for managing user roles (admin only)")
+@Tag(name = "Roles", description = "Operations for managing user roles (admin only).")
 public class RoleController {
 
     private final RoleService roleService;
