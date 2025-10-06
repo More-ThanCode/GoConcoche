@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.more_than_code.go_con_coche.auth.dtos.AuthRequest;
 import com.more_than_code.go_con_coche.auth.dtos.ForgotPasswordRequest;
 import com.more_than_code.go_con_coche.auth.dtos.RegisterRequest;
+import com.more_than_code.go_con_coche.auth.dtos.ResetPasswordRequest;
 import com.more_than_code.go_con_coche.auth.services.JwtService;
 import com.more_than_code.go_con_coche.email.EmailService;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
@@ -138,5 +139,25 @@ class AuthControllerTest {
 
         verify(passwordResetService).initiatePasswordReset(any());
     }
+
+    @Test
+    @DisplayName("resetPassword_ShouldReturn200_AndCallService")
+    void resetPassword_ShouldReturn200_AndCallService() throws Exception {
+        String token = "valid-reset-token";
+        String newPassword = "NewPassword123!";
+
+        String requestBody = objectMapper.writeValueAsString(new ResetPasswordRequest(token, newPassword));
+
+        doNothing().when(passwordResetService).resetPassword(any());
+
+        mockMvc.perform(post("/api/auth/reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Password reset successfully"));
+
+        verify(passwordResetService).resetPassword(any());
+    }
+
 
 }
