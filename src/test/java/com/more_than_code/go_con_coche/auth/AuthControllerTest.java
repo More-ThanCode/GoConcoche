@@ -176,5 +176,19 @@ class AuthControllerTest {
         verify(passwordResetService).validateToken(validToken);
     }
 
+    @Test
+    @DisplayName("validateResetToken_ShouldReturnFalse_WhenTokenIsInvalid")
+    void validateResetToken_ShouldReturnFalse_WhenTokenIsInvalid() throws Exception {
+        String invalidToken = "expired-token-456";
+
+        when(passwordResetService.validateToken(invalidToken)).thenReturn(false);
+
+        mockMvc.perform(get("/api/auth/validate-reset-token")
+                .param("token", invalidToken))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
+    }
+
+
 
 }
