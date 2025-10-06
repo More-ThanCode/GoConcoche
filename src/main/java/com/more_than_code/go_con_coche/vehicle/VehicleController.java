@@ -23,7 +23,7 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @Operation(summary = "Create a new vehicle", description = "Adds a vehicle to the authenticated owner's profile")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<VehicleResponse> createVehicle(@Valid @ModelAttribute VehicleRequest vehicleRequest) {
         VehicleResponse createdVehicle = vehicleService.createVehicle(vehicleRequest);
         return new ResponseEntity<>(createdVehicle, HttpStatus.CREATED);
@@ -51,8 +51,7 @@ public class VehicleController {
     }
 
     @Operation(summary = "Update a vehicle", description = "Updates a vehicle by ID")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<VehicleResponse> updateVehicle(@PathVariable Long id, @Valid @ModelAttribute VehicleRequest vehicleRequest) {
         VehicleResponse updatedVehicle = vehicleService.updateVehicle(id, vehicleRequest);
         return new ResponseEntity<>(updatedVehicle, HttpStatus.OK);
