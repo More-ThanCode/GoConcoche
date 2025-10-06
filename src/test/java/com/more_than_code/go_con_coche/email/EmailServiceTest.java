@@ -252,4 +252,33 @@ class EmailServiceTest {
             assertDoesNotThrow(() -> emailService.sendRegistrationEmail(null, username));
         }
     }
+
+    @Nested
+    @DisplayName("resetPasswordEmailEmail() tests")
+    class resetPasswordEmailTests {
+
+        @Test
+        @DisplayName("should send reset password email successfully with correct template, username, and resetLink")
+        void sendResetPasswordEmail_WhenValidData_ShouldSendEmailSuccessfully() throws Exception {
+            String token = "sEcReT_tOkEn_123";
+            String expectedResetLink = "http://localhost:5173/reset-password?token=" + token;
+
+            when(templateEngine.process(eq("forgot-password-email"), any(Context.class))).thenReturn(htmlContent);
+            when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
+
+            emailService.sendResetPasswordEmail(recipientEmail, username, token);
+
+            ArgumentCaptor<Context> contextCaptor = ArgumentCaptor.forClass(Context.class);
+            verify(templateEngine).process(eq("forgot-password-email"), contextCaptor.capture());
+
+            Context capturedContext = contextCaptor.getValue();
+            assertEquals(username, capturedContext.getVariable("username"));
+            assertEquals(expectedResetLink, capturedContext.getVariable("resetLink"));
+
+            verify(mailSender).createMimeMessage();
+            verify(mailSender).send(mimeMessage);
+
+        }
+
+    }
 }
