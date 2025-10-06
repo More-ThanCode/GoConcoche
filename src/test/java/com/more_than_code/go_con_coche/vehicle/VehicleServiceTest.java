@@ -437,4 +437,28 @@ public class VehicleServiceTest {
         verify(vehicleRepository).delete(vehicle);
         verify(cloudinaryService, never()).delete(anyString());
     }
+
+    @Test
+    @DisplayName("getVehicleByIdObj - When vehicle exists - Should return vehicle")
+    void getVehicleByIdObj_WhenVehicleExists_ShouldReturnVehicle() {
+        Long vehicleId = 1L;
+        when(vehicleRepository.findById(vehicleId)).thenReturn(Optional.of(vehicle));
+
+        Vehicle result = vehicleService.getVehicleByIdObj(vehicleId);
+
+        assertNotNull(result);
+        assertEquals(vehicleId, result.getId());
+        verify(vehicleRepository, times(1)).findById(vehicleId);
+    }
+
+    @Test
+    @DisplayName("getVehicleByIdObj - When vehicle does not exist - Should throw exception")
+    void getVehicleByIdObj_WhenVehicleDoesNotExist_ShouldThrowException() {
+        Long vehicleId = 99L;
+        when(vehicleRepository.findById(vehicleId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> vehicleService.getVehicleByIdObj(vehicleId));
+        verify(vehicleRepository, times(1)).findById(vehicleId);
+    }
+
 }
