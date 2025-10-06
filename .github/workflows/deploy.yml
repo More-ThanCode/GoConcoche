@@ -1,0 +1,74 @@
+name: Update Kustomization
+
+on:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+
+jobs:
+  update-image-tag:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Get release tag
+        id: get_tag
+        run: |
+          # Extract tag from the workflow run that triggered this workflow
+          TAG="${{ github.event.workflow_run.head_branch }}"
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "Updating kustomization to use tag: ${TAG}"
+
+      - name: Close existing kustomization PRs
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          # Find all open PRs that:
+          # 1. Have both "automated" and "kubernetes" labels
+          # 2. Have a branch name starting with "update-kustomization-"
+          # Close each one with a comment explaining why
+          gh pr list --label "automated,kubernetes" --state open --json number,headRefName --jq '.[] | select(.headRefName | startswith("update-kustomization-")) | .number' | while read pr_number; do
+            echo "Closing PR #${pr_number}"
+            gh pr close ${pr_number} --comment "Closing in favor of newer kustomization update"
+          done
+
+      - name: Update kustomization.yml
+        run: |
+          TAG="${{ steps.get_tag.outputs.tag }}"
+          sed -i "s/newTag: .*/newTag: ${TAG}/" kubernetes/kustomization.yml
+
+          # Show the changes
+          echo "Updated kustomization.yml:"
+          cat kubernetes/kustomization.yml
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: "chore: update kustomization image tag to ${{ steps.get_tag.outputs.tag }}"
+          branch: update-kustomization-${{ steps.get_tag.outputs.tag }}
+          delete-branch: true
+          title: "Update image tag to ${{ steps.get_tag.outputs.tag }}"
+          body: |
+            ### ⚠️ Merging this PR will trigger a deployment to the Kubernetes cluster using ArgoCD. ⚠️ 
+
+            ## Summary
+            Automated PR to update the Kubernetes kustomization file with the new image tag from the latest release.
+
+            ## Changes
+            - Updated `kubernetes/kustomization.yml` image tag to `${{ steps.get_Thetag.outputs.tag }}`
+            - This corresponds to the Docker image: `goconcoche/go-con-coche-app:${{ steps.get_tag.outputs.tag }}`
+
+            ## Release Workflow
+            - Triggered by release workflow run: ${{ github.event.workflow_run.html_url }}
+            - Release tag: `${{ steps.get_tag.outputs.tag }}`
+
+          labels: |
+            automated
+            kubernetes
+            deployment

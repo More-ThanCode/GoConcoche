@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Reservation Confirmation Email</title>
+    <title>Reminder Email</title>
     <style>
         /* Responsive */
         @media screen and (max-width: 600px) {
@@ -57,18 +57,16 @@
                             ¡Hi, <span th:text="${username}"></span>!
                         </h1>
                         <h2 style="font-size:26px; font-weight:bold;">
-                            Your reservation <a href="#"
-                                                style="text-decoration:underline; color:#56ccda; font-size:26px;"
-                                                target="_blank">#<span th:text="${reservationCode}"></span></a> is
-                            confirmed.
+                            It’s almost time! Your <span
+                                style="text-decoration:underline; color:#56ccda; font-size:26px;"
+                                target="_blank">GoConCoche</span> is ready for pick-up!
                         </h2>
                         <p style="font-size:15px; line-height:22px; margin:0 20px;">
-                            Thanks for choosing <strong>GoConCoche!</strong> You're all set to pick up
-                            the keys and start your journey with <strong><span
-                                th:text="${vehicleBrand} + ' ' + ${vehicleModel} + ' ' + ${vehicleYear}"></span></strong>.
-                            Below are your complete trip details for easy coordination. <br></br>You'll receive a
-                            friendly
-                            reminder email closer to your pick-up date.
+                            Your trip with <strong><span
+                                th:text="${vehicleBrand} + ' ' + ${vehicleModel} + ' ' + ${vehicleYear}"></span></strong>
+                            is coming up soon. Below you’ll find your reservation details to make sure everything is
+                            ready for your pick-up. <br><br>
+                            Please double-check your information and get ready to enjoy the ride!
                             <br><br>
                         </p>
                         <br>
@@ -148,7 +146,7 @@
                         <br><br>
                         <a class="button" href="#"
                            style="background-color:#00bcd4; color:#fff; text-decoration:none; padding:12px 20px; border-radius:6px; font-weight:bold; display:inline-block; width:100%; box-sizing:border-box;">
-                            TRACK RESERVATION STATUS
+                            START MY TRIP
                         </a>
                         <br>
                     </td>

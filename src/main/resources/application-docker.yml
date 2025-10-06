@@ -6,13 +6,13 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:com.mysql.cj.jdbc.Driver}
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 300000
-      max-lifetime: 600000
-      connection-timeout: 20000
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
 
   jpa:
     hibernate:
@@ -22,9 +22,8 @@ spring:
     show-sql: ${SPRING_JPA_SHOW_SQL:false}
     properties:
       hibernate:
-        dialect: ${SPRING_JPA_HIBERNATE_DIALECT:org.hibernate.dialect.MySQL8Dialect}
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
-    database-platform: ${SPRING_JPA_DATABASE_PLATFORM:org.hibernate.dialect.MySQL8Dialect}
 
   jackson:
     serialization:
@@ -33,11 +32,6 @@ spring:
 
 server:
   port: ${SERVER_PORT}
-  servlet:
-    context-path: /
-  error:
-    include-message: always
-    include-binding-errors: always
 
 jwt:
   rsa-public-key: ${RSA_PUBLIC_KEY}
@@ -50,24 +44,14 @@ cloudinary:
 
 logging:
   level:
-    com.more_than_code.go_con_coche: ${LOGGING_LEVEL_COM_MORE_THAN_CODE_GO_CON_COCHE:INFO}
-    org.hibernate.SQL: ${LOGGING_LEVEL_ORG_HIBERNATE_SQL:INFO}
-    org.hibernate.type.descriptor.sql.BasicBinder: INFO
-    org.springframework.security: INFO
-  pattern:
-    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    com.more_than_code.go_con_coche: INFO
+    org.hibernate.SQL: INFO
 
 management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
-      base-path: /actuator
+        include: health,info
   endpoint:
     health:
-      show-details: when-authorized
-      show-components: always
-  health:
-    db:
-      enabled: true
+      show-details: always

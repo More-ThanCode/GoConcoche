@@ -19,7 +19,7 @@ public class RentalOfferStatusScheduler {
 
     @Scheduled(cron = "0 0 0 * * *")
     @Transactional
-    public void updateFlightStatuses() {
+    public void updateRentalOfferStatuses() {
         LocalDateTime now = LocalDateTime.now();
         List<VehicleRentalOffer> rentalOffers = offerRepository.findByEndDateTimeBeforeAndIsAvailableTrue(now);
 

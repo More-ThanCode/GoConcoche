@@ -15,5 +15,4 @@ public class LocationServiceImpl {
         return locationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Location", "id", String.valueOf(id)));
     }
-
 }
