@@ -1,42 +1,30 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;IGNORECASE=TRUE
+    url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
+  data:
+    redis:
+      host: ${REDIS_HOST:redis-test}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:testpassword}
+
   jpa:
     hibernate:
-      ddl-auto: none # was create-drop
+      ddl-auto: none
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        hbm2ddl:
-          auto: none
-        jdbc:
-          batch_size: 20
-        order_inserts: true
-        order_updates: true
-        globally_quoted_identifiers: true
-        connection:
-          provider_disables_autocommit: true
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
+
   sql:
     init:
-      mode: always # was never
-    defer-datasource-initialization: false #was true
+      mode: always
+
   h2:
     console:
       enabled: true
-
-  cloudinary:
-    cloud-name: test_cloud_name
-    api-key: test_api_key
-    api-secret: test_api_secret
-    default-images:
-      PROFILE: /images/default-profile.jpg
-      CAR: /images/default-car.jpg
 
   mail:
     host: mailhog
@@ -49,6 +37,15 @@ spring:
           auth: false
           starttls:
             enable: false
-  jwt:
-    rsa-public-key: ${RSA_PUBLIC_KEY}
-    rsa-private-key: ${RSA_PRIVATE_KEY}
+
+cloudinary:
+  cloud-name: test_cloud_name
+  api-key: test_api_key
+  api-secret: test_api_secret
+  default-images:
+    PROFILE: /images/default-profile.jpg
+    CAR: /images/default-car.jpg
+
+jwt:
+  rsa-public-key: ${RSA_PUBLIC_KEY}
+  rsa-private-key: ${RSA_PRIVATE_KEY}

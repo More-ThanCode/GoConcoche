@@ -1,43 +1,33 @@
 services:
-  test:
-    image: maven:3.9.11-eclipse-temurin-21
-
-    working_dir: /src
-
-    volumes:
-      - type: bind
-        source: .
-        target: /src
-
-    entrypoint: ["/bin/sh", "-c", "echo $RSA_PUBLIC_KEY | head -c 30; echo ...; echo $RSA_PRIVATE_KEY | head -c 30; echo ...; mvn -Ptest clean verify --no-transfer-progress"]
-
-    container_name: test
-
-    environment:
-      - SPRING_PROFILES_ACTIVE=test
-      - SHOW_SQL=false
-      - SERVER_PORT=8080
-      - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
-      - RSA_PRIVATE_KEY=${RSA_PRIVATE_KEY}
-      - CLOUDINARY_CLOUD_NAME={CLOUDINARY_CLOUD_NAME}
-      - CLOUDINARY_API_KEY={CLOUDINARY_API_KEY}
-      - CLOUDINARY_API_SECRET={CLOUDINARY_API_SECRET}
-      - SPRING_MAIL_HOST=mailhog
-      - SPRING_MAIL_PORT=1025
-
-    restart: no
-
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
+  redis-test:
+    image: redis:7-alpine
+    container_name: redis-test
+    command: redis-server --requirepass testpassword
+    ports:
+      - "6380:6379"
 
   mailhog:
     image: mailhog/mailhog
     container_name: mailhog
     platform: linux/amd64
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - "1026:1025"
+      - "8026:8025"
+
+  test:
+    image: maven:3.9.11-eclipse-temurin-21
+    working_dir: /src
+    volumes:
+      - .:/src
+    command: sh -c "mvn -Ptest clean verify --no-transfer-progress"
+    container_name: test
+    environment:
+      - SPRING_PROFILES_ACTIVE=test
+      - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
+      - RSA_PRIVATE_KEY=${RSA_PRIVATE_KEY}
+      - REDIS_HOST=redis-test
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=testpassword
+    depends_on:
+      - redis-test
+      - mailhog
