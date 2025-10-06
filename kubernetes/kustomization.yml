@@ -13,7 +13,7 @@ resources:
 
 images:
   - name: goconcoche/go-con-coche-app
-    newTag: main
+    newTag: v1.1.0
 
 namePrefix: go-con-coche-
 
