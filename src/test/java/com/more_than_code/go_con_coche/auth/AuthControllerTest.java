@@ -2,7 +2,9 @@ package com.more_than_code.go_con_coche.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.more_than_code.go_con_coche.auth.dtos.AuthRequest;
+import com.more_than_code.go_con_coche.auth.dtos.ForgotPasswordRequest;
 import com.more_than_code.go_con_coche.auth.dtos.RegisterRequest;
+import com.more_than_code.go_con_coche.auth.dtos.ResetPasswordRequest;
 import com.more_than_code.go_con_coche.auth.services.JwtService;
 import com.more_than_code.go_con_coche.email.EmailService;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
@@ -11,6 +13,7 @@ import com.more_than_code.go_con_coche.role.Role;
 import com.more_than_code.go_con_coche.role.RoleRepository;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,8 +27,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,6 +58,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private EmailService emailService;
+
+    @MockitoBean
+    private com.more_than_code.go_con_coche.auth.services.PasswordResetService passwordResetService;
 
     @BeforeEach
     void setUp() {
@@ -115,4 +123,72 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(header().exists(HttpHeaders.AUTHORIZATION));
     }
+
+    @Test
+    @DisplayName("forgotPassword_ShouldReturn200_AndCallService")
+    void forgotPassword_ShouldReturn200_AndCallService() throws Exception {
+        String email = "user@example.com";
+
+        String requestBody = objectMapper.writeValueAsString(new ForgotPasswordRequest(email));
+
+        doNothing().when(passwordResetService).initiatePasswordReset(any());
+
+        mockMvc.perform(post("/api/auth/forgot-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Password reset email sent successfully"));
+
+        verify(passwordResetService).initiatePasswordReset(any());
+    }
+
+    @Test
+    @DisplayName("resetPassword_ShouldReturn200_AndCallService")
+    void resetPassword_ShouldReturn200_AndCallService() throws Exception {
+        String token = "valid-reset-token";
+        String newPassword = "NewPassword123!";
+
+        String requestBody = objectMapper.writeValueAsString(new ResetPasswordRequest(token, newPassword));
+
+        doNothing().when(passwordResetService).resetPassword(any());
+
+        mockMvc.perform(post("/api/auth/reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Password reset successfully"));
+
+        verify(passwordResetService).resetPassword(any());
+    }
+
+    @Test
+    @DisplayName("validateResetToken_ShouldReturnTrue_WhenTokenIsValid")
+    void validateResetToken_ShouldReturnTrue_WhenTokenIsValid() throws Exception {
+        String validToken = "valid-token-123";
+
+        when(passwordResetService.validateToken(validToken)).thenReturn(true);
+
+        mockMvc.perform(get("/api/auth/validate-reset-token")
+                .param("token", validToken))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+        verify(passwordResetService).validateToken(validToken);
+    }
+
+    @Test
+    @DisplayName("validateResetToken_ShouldReturnFalse_WhenTokenIsInvalid")
+    void validateResetToken_ShouldReturnFalse_WhenTokenIsInvalid() throws Exception {
+        String invalidToken = "expired-token-456";
+
+        when(passwordResetService.validateToken(invalidToken)).thenReturn(false);
+
+        mockMvc.perform(get("/api/auth/validate-reset-token")
+                .param("token", invalidToken))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
+    }
+
+
+
 }
