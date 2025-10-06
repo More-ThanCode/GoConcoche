@@ -22,13 +22,6 @@ import java.util.List;
 public class RentalOfferSearchController {
     private final RentalOfferSearchService searchService;
 
-    @Operation(summary = "Search available rental offers", description = "Search rental offers by location and date range")
-    @GetMapping("/search")
-    public ResponseEntity<List<SearchOfferResponse>> searchOffers(@RequestBody SearchOfferRequest request) {
-        List<SearchOfferResponse> offers = searchService.searchAvailableOffers(request.locationId(), request.startDateTime(), request.endDateTime());
-        return ResponseEntity.ok(offers);
-    }
-
     @Operation(summary = "Search offers by criteria", description = "Search rental offers filtered by city, date range, vehicle model, and minimum seats.")
     @GetMapping("/search/by-criteria")
     public ResponseEntity<List<SearchOfferResponse>> searchOffersByCriteria(
