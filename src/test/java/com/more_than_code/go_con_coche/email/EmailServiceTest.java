@@ -277,7 +277,18 @@ class EmailServiceTest {
 
             verify(mailSender).createMimeMessage();
             verify(mailSender).send(mimeMessage);
+        }
 
+        @Test
+        @DisplayName("Should use correct template name for reset password email")
+        void sendResetPasswordEmail_ShouldUseCorrectTemplate() {
+            String token = "anyToken";
+            when(templateEngine.process(eq("forgot-password-email"), any(Context.class))).thenReturn(htmlContent);
+            when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
+
+            emailService.sendResetPasswordEmail(recipientEmail, username, token);
+
+            verify(templateEngine).process(eq("forgot-password-email"), any(Context.class));
         }
 
     }
