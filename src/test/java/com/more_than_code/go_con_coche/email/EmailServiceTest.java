@@ -291,5 +291,17 @@ class EmailServiceTest {
             verify(templateEngine).process(eq("forgot-password-email"), any(Context.class));
         }
 
+        @Test
+        @DisplayName("Should handle exception correctly when sending reset password email fails")
+        void sendResetPasswordEmail_MailCreationFails_IsHandledCorrectly() {
+            String token = "anyToken";
+            when(templateEngine.process(eq("forgot-password-email"), any(Context.class))).thenReturn(htmlContent);
+
+            assertDoesNotThrow(() -> emailService.sendResetPasswordEmail(recipientEmail, username, token));
+
+            verify(mailSender).createMimeMessage();
+            verify(mailSender, never()).send(any(MimeMessage.class));
+        }
+
     }
 }
