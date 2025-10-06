@@ -3,6 +3,8 @@ package com.more_than_code.go_con_coche.vehicle_reservation.services;
 import com.more_than_code.go_con_coche.email.EmailService;
 import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.global.UnauthorizedActionException;
+import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
+import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
 import com.more_than_code.go_con_coche.renter_profile.services.RenterProfileService;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleOfferResponse;
@@ -154,5 +156,12 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
         );
 
         return reservationMapper.toResponse(savedReservation);
+    }
+
+    @Override
+    public List<VehicleReservationResponse> getMyReservation() {
+        RenterProfile renterProfile = renterProfileService.getRenterProfileObj();
+        List<VehicleReservation> reservations = reservationRepository.findByRenterId(renterProfile.getId());
+        return reservations.stream().map(reservationMapper::toResponse).toList();
     }
 }
