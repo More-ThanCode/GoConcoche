@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/vehicle-rental-offers")
 @RequiredArgsConstructor
-@Tag(name = "Rental Offers", description = "Operations to search and retrieve rental offers")
+@Tag(name ="Rental Offers", description = "Operations to search and retrieve rental offers")
 public class RentalOfferSearchController {
     private final RentalOfferSearchService searchService;
 
