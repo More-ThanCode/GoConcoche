@@ -19,7 +19,6 @@ import com.more_than_code.go_con_coche.vehicle_reservation.dtos.VehicleReservati
 import com.more_than_code.go_con_coche.vehicle_reservation.models.ReservationStatus;
 import com.more_than_code.go_con_coche.vehicle_reservation.models.VehicleReservation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,9 +50,7 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
 
     private void applySlotReservationStrategy(
             RentalOfferSlot slot,
-            VehicleRentalOffer offer,
-            LocalDateTime reservationStart,
-            LocalDateTime reservationEnd) {
+            VehicleRentalOffer offer) {
 
         slot.setAvailable(false);
         slotRepository.save(slot);
@@ -114,7 +111,7 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
 
         for (RentalOfferSlot slot : slotsToReserve) {
             if (slot.getSlotStart().isBefore(request.endDateTime()) && slot.getSlotEnd().isAfter(request.startDateTime())) {
-                applySlotReservationStrategy(slot, offer, request.startDateTime(), request.endDateTime());
+                applySlotReservationStrategy(slot, offer);
             }
         }
 
