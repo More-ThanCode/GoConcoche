@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users/me/roles")
 @RequiredArgsConstructor
-@Tag(name = "User Roles", description = "Endpoints for users to manage their own roles (OWNER/RENTER)")
+@Tag(name = "User Roles", description = "Endpoints for users to manage their own roles (owner and renter only).")
 public class UserRoleController {
 
     private final RegisteredUserRepository userRepository;
