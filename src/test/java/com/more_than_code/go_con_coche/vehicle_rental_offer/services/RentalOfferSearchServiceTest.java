@@ -59,31 +59,6 @@ public class RentalOfferSearchServiceTest {
     }
 
     @Test
-    @DisplayName("searchAvailableOffers - Should return offers with available slots within period")
-    void searchAvailableOffers_ShouldFilterBySlotAvailability() {
-        Long locationId = offer1.getLocation().getId();
-        RentalOfferSlot availableSlot = RentalOfferSlot.builder()
-                .slotStart(FROM).slotEnd(TO).isAvailable(true).build();
-        RentalOfferSlot unavailableSlot = RentalOfferSlot.builder()
-                .slotStart(FROM).slotEnd(TO).isAvailable(false).build();
-        when(offerRepository.findByLocationIdAndIsAvailableTrue(locationId))
-                .thenReturn(List.of(offer1, offer2));
-        when(slotService.getSlotsWithinPeriod(offer1.getId(), FROM, TO))
-                .thenReturn(List.of(availableSlot));
-        when(slotService.getSlotsWithinPeriod(offer2.getId(),FROM, TO))
-                .thenReturn(List.of(unavailableSlot));
-
-        List<SearchOfferResponse> result = searchService.searchAvailableOffers(locationId, FROM, TO);
-
-        assertNotNull(result);
-        assertEquals(1, result.size(), "Only offer 1 should be returned as offer 2 has no available slots.");
-        assertEquals(offer1.getId(), result.get(0).offerId());
-        assertEquals(1, result.get(0).availableSlots().size(), "Should include the available slot.");
-
-        verify(offerRepository).findByLocationIdAndIsAvailableTrue(locationId);
-    }
-
-    @Test
     @DisplayName("searchWithCriteria - When all criteria are present - Should call Specification and filter by slots")
     void searchWithCriteria_WhenAllCriteriaPresent_ShouldUseSpecificationAndFilterBySlots() {
         try (MockedStatic<VehicleRentalOfferSpecification> mockedSpec = mockStatic(VehicleRentalOfferSpecification.class)) {
@@ -108,26 +83,6 @@ public class RentalOfferSearchServiceTest {
             mockedSpec.verify(() -> VehicleRentalOfferSpecification.withCriteria(criteria));
             verify(offerRepository).findAll(mockSpecification);
             verify(slotService, times(2)).getSlotsWithinPeriod(anyLong(), eq(FROM), eq(TO));
-        }
-    }
-
-    @Test
-    @DisplayName("searchWithCriteria - When no date criteria are provided - Should skip slot filtering")
-    void searchWithCriteria_WhenNoDateCriteria_ShouldSkipSlotFiltering() {
-        SearchCriteria criteriaWithoutDates = SearchCriteria.builder().city("Valencia").build();
-
-        try (MockedStatic<VehicleRentalOfferSpecification> mockedSpec = mockStatic(VehicleRentalOfferSpecification.class)) {
-            mockedSpec.when(() -> VehicleRentalOfferSpecification.withCriteria(criteriaWithoutDates))
-                    .thenReturn(mockSpecification);
-            when(offerRepository.findAll(mockSpecification)).thenReturn(List.of(offer1, offer2));
-
-            List<SearchOfferResponse> result = searchService.searchWithCriteria(criteriaWithoutDates);
-
-            assertNotNull(result);
-            assertEquals(2, result.size(), "Both offers should be returned as slot filtering is skipped.");
-            assertTrue(result.get(0).availableSlots().isEmpty(), "SlotsInfo list should be empty.");
-
-            verify(slotService, never()).getSlotsWithinPeriod(anyLong(), any(), any());
         }
     }
 

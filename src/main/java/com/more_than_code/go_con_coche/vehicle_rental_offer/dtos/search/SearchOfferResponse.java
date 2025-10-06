@@ -5,12 +5,10 @@ import java.util.List;
 
 public record SearchOfferResponse(
         Long offerId,
-        Long vehicleId,
         String vehicleModel,
         String vehicleBrand,
-        Long locationId,
+        String city,
         LocalDateTime startDateTime,
         LocalDateTime endDateTime,
-        double priceHour,
-        List<SlotInfo> availableSlots
+        double priceHour
 ) {}
