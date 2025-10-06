@@ -54,7 +54,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/api/auth/**","http://localhost:5173", "https://More-ThanCode.github.io/GoConcoche-Front").permitAll()
+                                .requestMatchers("/api/auth/**","http://localhost:5173/**", "https://More-ThanCode.github.io/GoConcoche-Front/**").permitAll()
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/swagger-ui/index.html", "/v3/api-docs/**", "/health", "/actuator/**").permitAll()
 
                                 .requestMatchers(HttpMethod.GET, "/api/renter-profiles/me").hasRole("RENTER")
