@@ -27,6 +27,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -157,6 +159,21 @@ class AuthControllerTest {
                 .andExpect(content().string("Password reset successfully"));
 
         verify(passwordResetService).resetPassword(any());
+    }
+
+    @Test
+    @DisplayName("validateResetToken_ShouldReturnTrue_WhenTokenIsValid")
+    void validateResetToken_ShouldReturnTrue_WhenTokenIsValid() throws Exception {
+        String validToken = "valid-token-123";
+
+        when(passwordResetService.validateToken(validToken)).thenReturn(true);
+
+        mockMvc.perform(get("/api/auth/validate-reset-token")
+                .param("token", validToken))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+
+        verify(passwordResetService).validateToken(validToken);
     }
 
 
