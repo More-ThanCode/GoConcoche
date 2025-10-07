@@ -20,23 +20,23 @@ public record VehicleRequest (
         String plateNumber,
 
         @NotBlank
-        @Schema(description = "Insurance policy number", example = "INS-987654321")
+        @Schema(description = "Insurance policy number", example = "INS-987654322")
         String insuranceNumber,
 
         @NotBlank
-        @Schema(description = "Vehicle model", example = "Civic")
+        @Schema(description = "Vehicle model", example = "Renegade")
         String model,
 
         @NotBlank
-        @Schema(description = "Vehicle brand", example = "Honda")
+        @Schema(description = "Vehicle brand", example = "Jeep")
         String brand,
 
         @NotNull
-        @Schema(description = "Manufacture year", example = "2022")
+        @Schema(description = "Manufacture year", example = "2023")
         Integer year,
 
         @NotBlank
-        @Schema(description = "Vehicle color", example = "Red")
+        @Schema(description = "Vehicle color", example = "White")
         String color,
 
         @NotNull
@@ -47,11 +47,11 @@ public record VehicleRequest (
         Integer childSeatsNumber,
 
         @NotNull
-        @Schema(description = "Fuel type of the car", example = "Diesel")
+        @Schema(description = "Fuel type of the car", example = "DIESEL")
         FuelTypeCar fuelTypeCar,
 
         @NotBlank
-        @Schema(description = "Fuel consumption per 100 km", example = "6.5 L/100km")
+        @Schema(description = "Fuel consumption per 100 km", example = "5.9 L/100km")
         String fuelConsumption,
 
         @Schema(description = "Vehicle image file")
