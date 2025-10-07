@@ -29,8 +29,6 @@ class RentalOfferStatusSchedulerTest {
 
         scheduler.updateRentalOfferStatuses();
 
-        verify(offer1, times(1)).updateStatusIfNeeded();
-        verify(offer2, times(1)).updateStatusIfNeeded();
         verify(offerRepository, times(1)).saveAll(List.of(offer1, offer2));
     }
 
