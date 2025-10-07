@@ -46,18 +46,6 @@ class VehicleRentalOfferTest {
     }
 
     @Test
-    void updateStatusIfNeeded_shouldSetUnavailableWhenExpired() {
-        VehicleRentalOffer offer = VehicleRentalOffer.builder()
-                .endDateTime(LocalDateTime.now().minusDays(1))
-                .isAvailable(true)
-                .build();
-
-        offer.updateStatusIfNeeded();
-
-        assertThat(offer.isAvailable()).isFalse();
-    }
-
-    @Test
     void settersAndGetters() {
         Vehicle vehicle = new Vehicle();
         Location location = new Location();

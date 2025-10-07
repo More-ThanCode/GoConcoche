@@ -22,10 +22,7 @@ public class RentalOfferStatusScheduler {
     public void updateRentalOfferStatuses() {
         LocalDateTime now = LocalDateTime.now();
         List<VehicleRentalOffer> rentalOffers = offerRepository.findByEndDateTimeBeforeAndIsAvailableTrue(now);
-
-        for (VehicleRentalOffer offer : rentalOffers) {
-            offer.updateStatusIfNeeded();
-        }
+        rentalOffers.forEach(offer -> offer.setAvailable(false));
         offerRepository.saveAll(rentalOffers);
     }
 }
