@@ -136,10 +136,10 @@ http://localhost:8080/swagger-ui.html
 - POST http://localhost:8080/api/auth/register - Register a new user
 - POST http://localhost:8080/api/auth/login - Login and receive JWT token
 
-#### Email Reset
+#### Password Reset
 - POST http://localhost:8080/api/auth/forgot-password - To receive Forgot Password Email
 - POST http://localhost:8080/api/auth/reset-password - Resets user password using token from email
-- POST http://localhost:8080/api/auth/validate-reset-token - Checks that password reset token is valid
+- POST http://localhost:8080/api/auth/validate-reset-token?token={token} - Checks that password reset token is valid
 
 #### Owner Profiles
 - POST http://localhost:8080/api/api/owner-profiles - Create owner profile (OWNER role)
