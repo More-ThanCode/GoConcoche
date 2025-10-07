@@ -37,10 +37,14 @@ public class VehicleRentalOfferServiceImpl implements VehicleRentalOfferService 
         if (!rentalOfferRequest.endDateTime().isAfter(rentalOfferRequest.startDateTime())) {
             throw new IllegalArgumentException("End date-time must be after start date-time");
         }
-        RegisteredUser owner = userService.getAuthenticatedUser();
-        OwnerProfile ownerProfile = ownerProfileService.getOwnerProfileObj();
 
+        OwnerProfile ownerProfile = ownerProfileService.getOwnerProfileObj();
         Vehicle vehicle = vehicleService.getVehicleByIdObj(rentalOfferRequest.vehicleId());
+
+        if(vehicle.getOwner().getId() != ownerProfile.getId()) {
+            throw new AccessDeniedException("You are not allowed to modify this vehicle rental offer");
+        }
+
         Location location = locationService.getLocationByIdObj(rentalOfferRequest.locationId());
 
         if (offerRepository.existsOverlappingOffer(vehicle.getId(), rentalOfferRequest.startDateTime(), rentalOfferRequest.endDateTime())) {
