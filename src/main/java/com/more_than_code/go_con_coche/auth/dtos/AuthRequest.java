@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 public record AuthRequest(
         @NotBlank(message = "Username cannot be blank")
         @Size(max = 30, message = "Username cannot be longer than 30 characters!")
-        @Schema(description = "Your username", example = "SpongeBob")
+        @Schema(description = "Your username", example = "niaofnarnia")
         String username,
 
         @NotBlank(message = "Password cannot be blank")

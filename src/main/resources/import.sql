@@ -24,8 +24,8 @@ INSERT INTO renter_profiles (registered_user_id, type_license, license_number, e
 --locations
 INSERT INTO locations (city, district, address) VALUES ('Valencia', 'El Carmen', 'Carrer Guillem de Castro, 4');
 INSERT INTO locations (city, district, address) VALUES ('Valencia', 'Eixample', 'Carrer Ruzafa, 24');
-INSERT INTO locations (city, district, address) VALUES ('arcelona', 'Eixample', 'Carrer de Valencia, 340');
-INSERT INTO locations (city, district, address) VALUES ('Barcelona', 'Eixample', 'Carrer de Mallorca, 290');
+INSERT INTO locations (city, district, address) VALUES ('Barcelona', 'Ciutat Vella', 'Carrer dels Escudellers, 33');
+INSERT INTO locations (city, district, address) VALUES ('Barcelona', 'Les Corts', 'Carrer de Bordeus, 35');
 
 --vehicles
 INSERT INTO vehicles (vin, plate_number, insurance_number, model, brand, year, color, seater, child_seats_number, fuel_type_car, fuel_consumption, image_url, owner_id) VALUES ('WVWZZZ1JZXW000001','AA11111BB', 'INS-987654321', 'Golf', 'Volkswagen', 2021, 'Black', 'SEDAN', 1,'PETROL', '7.5L/100km','/images/default-car.jpg', 1);
