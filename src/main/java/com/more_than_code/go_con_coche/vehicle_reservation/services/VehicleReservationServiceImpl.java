@@ -3,12 +3,10 @@ package com.more_than_code.go_con_coche.vehicle_reservation.services;
 import com.more_than_code.go_con_coche.email.EmailService;
 import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.global.UnauthorizedActionException;
-import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
-import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
+import com.more_than_code.go_con_coche.renter_profile.models.TypeLicense;
 import com.more_than_code.go_con_coche.renter_profile.services.RenterProfileService;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleOfferResponse;
-import com.more_than_code.go_con_coche.vehicle.models.Seater;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.RentalOfferSlot;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.VehicleRentalOffer;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.repositories.RentalOfferSlotRepository;
@@ -41,38 +39,6 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
     private final VehicleReservationMapper reservationMapper;
     private final EmailService emailService;
 
-    private int getVehicleCapacity (Seater seater) {
-        return switch (seater) {
-            case SMART -> 2;
-            case SEDAN -> 4;
-            case SUV -> 5;
-            case VAN -> 7;
-        };
-    }
-
-    private void applySlotReservationStrategy(
-            RentalOfferSlot slot,
-            VehicleRentalOffer offer) {
-
-        slot.setAvailable(false);
-        slotRepository.save(slot);
-        boolean anyAvailable = offer.getSlots().stream().anyMatch(RentalOfferSlot::isAvailable);
-        if (!anyAvailable) {
-            offer.setAvailable(false);
-            offerRepository.save(offer);
-        }
-    }
-
-    private long calculateDurationInHours (LocalDateTime start, LocalDateTime end) {
-        long minutes = ChronoUnit.MINUTES.between(start, end);
-        return (long) Math.ceil(minutes / 60.0);
-    }
-
-    private String generateReservationCode() {
-        String uuid = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
-        return uuid.substring(0, 3) + "-" + uuid.substring(3, 6) + "-" + uuid.substring(6, 9);
-    }
-
     @Override
     @Transactional
     public VehicleReservationResponse createReservation(VehicleReservationRequest request) {
@@ -88,7 +54,16 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
             throw new IllegalArgumentException("Reservation time must be fully within the offer period.");
         }
 
-        int vehicleCapacity = getVehicleCapacity(offer.getVehicle().getSeater());
+        TypeLicense driverLicense = renterProfile.getTypeLicense();
+        TypeLicense requiredLicense = offer.getVehicle().getSeater().getRequiredLicense();
+        int vehicleCapacity = offer.getVehicle().getSeater().getSeatCount();
+
+        if (!isLicenseCompatible(driverLicense, requiredLicense)) {
+            throw new IllegalArgumentException(String.format(
+                    "Your license type (%s) does not permit driving this vehicle (requires %s).",
+                    driverLicense, requiredLicense
+            ));
+        }
         if (request.travellerNumber() > vehicleCapacity) {
             throw new IllegalArgumentException(String.format("The number of travellers (%d) exceeds the vehicle's seating capacity (%d).", request.travellerNumber(), vehicleCapacity));
         }
@@ -113,7 +88,7 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
 
         for (RentalOfferSlot slot : slotsToReserve) {
             if (slot.getSlotStart().isBefore(request.endDateTime()) && slot.getSlotEnd().isAfter(request.startDateTime())) {
-                applySlotReservationStrategy(slot, offer);
+                slotReservation(slot, offer);
             }
         }
 
@@ -163,5 +138,50 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
         RenterProfile renterProfile = renterProfileService.getRenterProfileObj();
         List<VehicleReservation> reservations = reservationRepository.findByRenterId(renterProfile.getId());
         return reservations.stream().map(reservationMapper::toResponse).toList();
+    }
+
+
+    private void slotReservation(RentalOfferSlot slot, VehicleRentalOffer offer) {
+        slot.setAvailable(false);
+        slotRepository.save(slot);
+        boolean anyAvailable = offer.getSlots().stream().anyMatch(RentalOfferSlot::isAvailable);
+        if (!anyAvailable) {
+            offer.setAvailable(false);
+            offerRepository.save(offer);
+        }
+    }
+
+    private long calculateDurationInHours (LocalDateTime start, LocalDateTime end) {
+        long minutes = ChronoUnit.MINUTES.between(start, end);
+        return (long) Math.ceil(minutes / 60.0);
+    }
+
+    private String generateReservationCode() {
+        String uuid = UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
+        return uuid.substring(0, 3) + "-" + uuid.substring(3, 6) + "-" + uuid.substring(6, 9);
+    }
+
+    private boolean isLicenseCompatible(TypeLicense driverLicense, TypeLicense requiredLicense) {
+        if (driverLicense == requiredLicense) return true;
+
+        switch (driverLicense) {
+            case BE:
+                return requiredLicense == TypeLicense.B;
+            case C1:
+            case C1E:
+                return requiredLicense == TypeLicense.B || requiredLicense == TypeLicense.BE;
+            case C:
+            case CE:
+                return requiredLicense == TypeLicense.B || requiredLicense == TypeLicense.BE
+                        || requiredLicense == TypeLicense.C1 || requiredLicense == TypeLicense.C1E;
+            case D1:
+            case D1E:
+                return requiredLicense == TypeLicense.B || requiredLicense == TypeLicense.C1;
+            case D:
+            case DE:
+                return true;
+            default:
+                return false;
+        }
     }
 }

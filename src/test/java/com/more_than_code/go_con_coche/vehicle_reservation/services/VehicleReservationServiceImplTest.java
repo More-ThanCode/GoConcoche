@@ -4,6 +4,7 @@ import com.more_than_code.go_con_coche.email.EmailService;
 import com.more_than_code.go_con_coche.location.Location;
 import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
+import com.more_than_code.go_con_coche.renter_profile.models.TypeLicense;
 import com.more_than_code.go_con_coche.renter_profile.services.RenterProfileService;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleOfferResponse;
 import com.more_than_code.go_con_coche.vehicle.models.Seater;
@@ -113,6 +114,7 @@ class VehicleReservationServiceImplTest {
 
     @Test
     void createReservation_success() {
+        renter.setTypeLicense(TypeLicense.B);
         when(renterProfileService.getRenterProfileObj()).thenReturn(renter);
         when(offerRepository.findById(10L)).thenReturn(Optional.of(offer));
         when(slotService.getSlotsWithinPeriod(anyLong(), any(), any())).thenReturn(List.of(slot));
@@ -160,6 +162,7 @@ class VehicleReservationServiceImplTest {
     @Test
     void createReservation_whenTooManyTravellers() {
         offer.getVehicle().setSeater(Seater.SMART);
+        renter.setTypeLicense(TypeLicense.B);
         when(renterProfileService.getRenterProfileObj()).thenReturn(renter);
         when(offerRepository.findById(10L)).thenReturn(Optional.of(offer));
 
@@ -175,6 +178,7 @@ class VehicleReservationServiceImplTest {
 
     @Test
     void createReservation_whenNoSlotsAvailable() {
+        renter.setTypeLicense(TypeLicense.B);
         when(renterProfileService.getRenterProfileObj()).thenReturn(renter);
         when(offerRepository.findById(10L)).thenReturn(Optional.of(offer));
         when(slotService.getSlotsWithinPeriod(anyLong(), any(), any())).thenReturn(Collections.emptyList());
