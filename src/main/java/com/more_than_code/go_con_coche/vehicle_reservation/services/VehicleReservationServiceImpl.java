@@ -3,12 +3,9 @@ package com.more_than_code.go_con_coche.vehicle_reservation.services;
 import com.more_than_code.go_con_coche.email.EmailService;
 import com.more_than_code.go_con_coche.global.EntityNotFoundException;
 import com.more_than_code.go_con_coche.global.UnauthorizedActionException;
-import com.more_than_code.go_con_coche.owner_profile.OwnerProfile;
-import com.more_than_code.go_con_coche.registered_user.RegisteredUser;
 import com.more_than_code.go_con_coche.renter_profile.models.RenterProfile;
 import com.more_than_code.go_con_coche.renter_profile.services.RenterProfileService;
 import com.more_than_code.go_con_coche.vehicle.dtos.VehicleOfferResponse;
-import com.more_than_code.go_con_coche.vehicle.models.Seater;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.RentalOfferSlot;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.models.VehicleRentalOffer;
 import com.more_than_code.go_con_coche.vehicle_rental_offer.repositories.RentalOfferSlotRepository;
@@ -41,19 +38,7 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
     private final VehicleReservationMapper reservationMapper;
     private final EmailService emailService;
 
-    private int getVehicleCapacity (Seater seater) {
-        return switch (seater) {
-            case SMART -> 2;
-            case SEDAN -> 4;
-            case SUV -> 5;
-            case VAN -> 7;
-        };
-    }
-
-    private void applySlotReservationStrategy(
-            RentalOfferSlot slot,
-            VehicleRentalOffer offer) {
-
+    private void applySlotReservationStrategy(RentalOfferSlot slot, VehicleRentalOffer offer) {
         slot.setAvailable(false);
         slotRepository.save(slot);
         boolean anyAvailable = offer.getSlots().stream().anyMatch(RentalOfferSlot::isAvailable);
@@ -88,7 +73,7 @@ public class VehicleReservationServiceImpl implements VehicleReservationService{
             throw new IllegalArgumentException("Reservation time must be fully within the offer period.");
         }
 
-        int vehicleCapacity = getVehicleCapacity(offer.getVehicle().getSeater());
+        int vehicleCapacity = offer.getVehicle().getSeater().getSeatCount();
         if (request.travellerNumber() > vehicleCapacity) {
             throw new IllegalArgumentException(String.format("The number of travellers (%d) exceeds the vehicle's seating capacity (%d).", request.travellerNumber(), vehicleCapacity));
         }
